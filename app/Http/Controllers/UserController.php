@@ -37,12 +37,14 @@ class UserController
 
     public function login(LoginRequest $request)
     {
-       $result = Auth::attempt([
+       if (Auth::attempt([
            'email' => $request->get('email'),
            'password' => $request->get('password')
-       ]);
-
-       print_r($result);
+       ])) {
+           return response()->redirectTo('/catalog');
+       } else {
+           return back()->withErrors(['email' => 'Неверные учетные данные.']);
+       }
 
     }
 

@@ -6,12 +6,17 @@
         <fieldset>
             @csrf
             <input type="text" name="email" id="email" placeholder="E-mail" >
+            @error('email')
+            <label for="email"> <b>{{ $message }} </b> </label>
+            @enderror
             <br/>
             <label style="color:red">
-
             </label>
             <br/>
             <input type="password" name="password" id="password" placeholder="Password" >
+            @error('password')
+            <label for="password"> <b>{{ $message }} </b> </label>
+            @enderror
             <br/>
             <label style="color:red">
             </label>

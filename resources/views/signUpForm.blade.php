@@ -38,7 +38,7 @@
             <input type="submit" name="submit" id="submit" value="REGISTER">
             <br/>
             <div class="buttons">
-                <a href="login" class="register-link">Login</a>
+                <a href="login" class="register-link"> Login </a>
             </div>
         </fieldset>
         <?php print_r($errors) ?>
@@ -96,15 +96,8 @@
         cursor: pointer;
     }
 
-    input[type="buttons"] {
-        background: rgba(235, 30, 54, 1);
-        border: 0;
-        display: block;
-        width: 70%;
-        margin: 0 auto;
-        color: white;
-        padding: 0.7rem;
-        cursor: pointer;
+    .register-link {
+        color: red;
     }
 
     input {
