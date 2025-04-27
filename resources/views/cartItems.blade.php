@@ -9,46 +9,48 @@
         <table>
             <tr>
                 <th>Product</th>
-                <!--                <th>Color</th>-->
-                <!--                <th>Size</th>-->
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Cost</th>
                 <th></th>
             </tr>
-            <tr>
+            @if ($productsInCart->isEmpty())
+                <tr>
+                    <td colspan="5" style="text-align: center;">ПУСТО</td> <!-- Сообщение о пустой корзине -->
+                </tr>
+            @else
                 @foreach($cartItems as $elem)
-                <td>Product  {{ $elem->id }} </td>
+                    @php
+                        $item = $productsInCart->firstWhere('id', $elem->product_id);
+                    @endphp
 
-                <td>&#36;<input name="price" class="price"
-                                value="{{ '$productsInCart[$elem->getProductId()]->getPrice()' }}" /></td>
-                <td>
-                    <i class="fa fa-minus" title="Decrease Qty"></i>
-                    <input class="qty" value="{{ $elem->amount }}" name="qty" axlength="2" />
-                    <i class="fa fa-plus" title="Increase Qty"></i>
-                </td>
-                <td>&#36;<input name="cost" class="cost"
-                                value="{{ '$productsInCart[$elem->getProductId()]->getPrice() * $elem->getAmount()' }}" /></td>
-                <form action="/deleteProduct" method="POST">
-                    <td class="button"><button type="submit" class="fa fa-trash-o" title="Delete Item" ></button></td>
-                    <input name="product_id" class="price" value="{{ $elem->product_id() }}" />
-                </form>
-            </tr>
-            @endforeach;
+                    <tr>
+                        <td> Product {{ $item->product_name }} </td>
+                        <td>&#36;<input name="price" class="price" value="{{ $item->price }}" readonly /></td>
+                        <td>
+                            <i class="fa fa-minus" title="Decrease Qty"></i>
+                            <input class="qty" value="{{ $elem->amount }}" name="qty" maxlength="2" />
+                            <i class="fa fa-plus" title="Increase Qty"></i>
+                        </td>
+                        <td>&#36;<input name="cost" class="cost" value="{{ $item->price * $elem->amount }}" readonly /></td>
+                        <td>
+                            <form action="/deleteProduct" method="POST">
+                                <button type="submit" class="fa fa-trash-o" title="Delete Item"></button>
+                                <input name="product_id" type="hidden" value="{{ $elem->product_id }}" />
+                            </form>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </table>
         <div id="totalAmount">
             <div class="left">
                 <h1>Total Cost</h1>
-                <p><div class="buttons">
+                <p>&#36;<input name="total" id="total" value="{{ print_r('$totalcost') }}" readonly /></p>
+                <div class="buttons">
                     <br><br><br><br><br><br>
                     <a href="/catalog" style="color:purple" class="register-link">Go to Catalog</a>
-
-                </div></p>
-            </div>
-            <div class="right">
-                &#36;<input name="total" id="total" value="{{ 'if (!empty($cartItems)) {
-                    echo $totalCost;
-                    }' }}" />
+                </div>
             </div>
         </div>
         <form action="/delete" method="POST">
@@ -61,7 +63,6 @@
         <p>An interactive shopping basket </p>
     </div>
 </div>
-
 
 <style>
 

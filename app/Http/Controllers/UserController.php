@@ -48,6 +48,16 @@ class UserController
 
     }
 
+    public function logout(Request $request)
+    {
+        Auth::logout(); // Выход из системы
+
+        $request->session()->invalidate(); // Инвалидируем сессию
+        $request->session()->regenerateToken(); // Регенерируем CSRF токен
+
+        return redirect('/registration '); // Перенаправление на главную страницу или страницу входа
+    }
+
 
 
 

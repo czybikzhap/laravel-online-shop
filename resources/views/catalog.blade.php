@@ -4,15 +4,14 @@
 </head>
 <body>
 <form action="/logout" method="POST">
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
-    <br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+    @csrf
     <button> Log Out</button>
 </form>
 
-@foreach ($catalog as $catalog)
+@foreach ($catalog as $item) <!-- Изменил переменную на $item для ясности -->
 <div class="container ">
     <div class="card asics">
-        <p class="price"> {{$catalog->price . 'Rub'}}  </p>
+        <p class="price"> {{$item->price . 'Rub'}}  </p>
 
         <i class="info fas fa-info-circle"></i>
 
@@ -20,41 +19,41 @@
             <img src="{{ print_r('img') }} ">
         </div>
         <div class="contentBx  ">
-            <h2>{{ $catalog->product_name }}</h2>
+            <h2>{{ $item->product_name }}</h2>
 
             <div class="size">
-                <h3>{{ $catalog->description }}</h3>
+                <h3>{{ $item->description }}</h3>
             </div>
 
-            <form action="/add-to-cart" method="POST">
-                <button > Add to Cart</button >
-                <input type="hidden" name="product_id" value="{{ $catalog->id }}">
+            <form action="/addToCart" method="POST">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $item->id }}">
+                <input type="hidden" name="amount" class="amount" value="0"> <!-- Изменил id на class -->
 
                 <br><br>
 
-                <div class="quantity-field" >
+                <div class="quantity-field">
                     <button
+                        type="button"
                         class="value-button decrease-button"
                         onclick="decreaseValue(this)"
-                        title="Azalt">-</button>
-                    <div class="number"> 0 </div>
+                        title="Уменьшить">-</button>
+                    <div class="number">0</div> <!-- Удалил id -->
                     <button
+                        type="button"
                         class="value-button increase-button"
-                        onclick="increaseValue(this, 5)"
-                        title="Arrtır"
-                    >+
-                    </button>
+                        onclick="increaseValue(this)"
+                        title="Увеличить">+</button>
                 </div>
+
+                <button type="submit">Добавить в корзину</button>
             </form>
 
         </div>
     </div>
-    <form action="/product" method="POST">
-        <button> Go to Product card</button>
-        <input type="hidden" name="product_id" value="<?php echo '$product->getId()' ?>">
-    </form>
 </div>
-@endforeach;
+@endforeach
+
 <div class="buttons">
     <a href="cartItems" style="color:blue" class="register-link">Go to Cart</a>
     <br>
@@ -63,26 +62,28 @@
 
 </body>
 
-
 <script>
-    function increaseValue(button, limit) {
-        const numberInput = button.parentElement.querySelector('.number');
-        var value = parseInt(numberInput.innerHTML, 10);
-        if(isNaN(value)) value = 0;
-        if(limit && value >= limit) return;
-        numberInput.innerHTML = value+1;
+    function increaseValue(button) {
+        var quantityField = button.parentNode.querySelector('.number');
+        var amountField = button.parentNode.parentNode.querySelector('.amount'); // Изменил на parentNode для поиска
+        var currentValue = parseInt(quantityField.innerText);
+        currentValue++;
+        quantityField.innerText = currentValue;
+        amountField.value = currentValue; // Обновляем скрытое поле
     }
-
 
     function decreaseValue(button) {
-        const numberInput = button.parentElement.querySelector('.number');
-        var value = parseInt(numberInput.innerHTML, 10);
-        if(isNaN(value)) value = 0;
-        if(value < 1) return;
-        numberInput.innerHTML = value-1;
+        var quantityField = button.parentNode.querySelector('.number');
+        var amountField = button.parentNode.parentNode.querySelector('.amount'); // Изменил на parentNode для поиска
+        var currentValue = parseInt(quantityField.innerText);
+        if (currentValue > 0) {
+            currentValue--;
+            quantityField.innerText = currentValue;
+            amountField.value = currentValue; // Обновляем скрытое поле
+        }
     }
-
 </script>
+
 
 <style>
     * {

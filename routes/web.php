@@ -3,6 +3,7 @@
 use App\Controller\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\CartItemsController;
 
 
 Route::get('/', function () {
@@ -18,4 +19,7 @@ Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
 Route::get('/catalog', [\App\Http\Controllers\ProductController::class, 'getCatalog']);
 
 Route::get('/cartItems', [\App\Http\Controllers\CartItemsController::class, 'getCartItems']);
-Route::post('/cartItems', [\App\Http\Controllers\CartItemsController::class, 'addToCartItems']);
+Route::post('/addToCart', [\App\Http\Controllers\CartItemsController::class, 'addToCart']);
+
+Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout']);
+
