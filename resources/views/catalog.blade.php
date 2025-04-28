@@ -57,7 +57,7 @@
 <div class="buttons">
     <a href="cartItems" style="color:blue" class="register-link">Go to Cart</a>
     <br>
-    <a href="profile" style="color:red" class="register-link">My Profile</a>
+    <a href="userProfile" style="color:red" class="register-link">My Profile</a>
 </div>
 
 </body>

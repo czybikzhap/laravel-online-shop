@@ -27,3 +27,4 @@ Route::post('deleteProduct', [\App\Http\Controllers\CartItemsController::class, 
 
 Route::post('deleteCart', [\App\Http\Controllers\CartItemsController::class, 'deleteCart']);
 
+Route::get('userProfile', [\App\Http\Controllers\UserController::class, 'getUserProfile']);

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ProductRequest;
-use App\Models\CartItem;
+use App\Models\CartItems;
 use App\Models\Product;
 use App\Http\Requests\CartItemRequest;
 use Illuminate\Http\Request;
@@ -16,23 +16,20 @@ class CartItemsController extends Controller
         $user = Auth::user();
         //print_r($user->id);die;
 
-        $cartItems = CartItem::query()
+        $cartItems = CartItems::query()
             ->where('user_id', $user->id)
             ->get();
         //print_r($cartItems);die;
 
-        $productIds = CartItem::query()
+        $productIds = CartItems::query()
             ->where('user_id', $user->id)
-            ->pluck('product_id');
+            ->pluck('product_id');  // возвращает все product_id данного пользователя
         //print_r($productIds);die;
 
         $productsInCart = Product::query()
             ->whereIn('id', $productIds)
             ->get();
         //print_r($products);die;
-
-        //$item = $productsInCart->whereIn('id', $productIds);
-        //print_r($item);die;
 
 
         return view('cartItems', compact( 'cartItems', 'productsInCart'));
@@ -46,18 +43,16 @@ class CartItemsController extends Controller
         $amount = $request->get('amount');
         //print_r($amount);die;
 
-        $cartItem = CartItem::query()
+        $cartItem = CartItems::query()
             ->where('user_id', $user->id)
             ->where('product_id', $productId)
             ->first();
 
         if ($cartItem) {
-            // Если запись существует, увеличиваем количество
             $cartItem->amount += $amount;
-            $cartItem->save(); // Сохраняем изменения
+            $cartItem->save();
         } else {
-            // Если записи нет, создаем новую
-            CartItem::query()->create([
+            CartItems::query()->create([
                 'user_id' => $user->id,
                 'product_id' => $productId,
                 'amount' => $amount,
@@ -74,12 +69,10 @@ class CartItemsController extends Controller
         $productIds = $request->get('product_id');
         //print_r($productIds);die;
 
-        $cartItem = CartItem::query()
+        CartItems::query()
             ->where('user_id', $user->id)
             ->where('product_id', $productIds)
             ->delete();
-
-        //print_r($cartItem);die;
 
         return redirect('/cartItems');
 
@@ -89,7 +82,7 @@ class CartItemsController extends Controller
     {
         $user = Auth::user();
 
-        CartItem::query()
+        CartItems::query()
             ->where('user_id', $user->id)
             ->delete();
 

@@ -48,6 +48,13 @@ class UserController
 
     }
 
+    public function getUserProfile()
+    {
+        $user = Auth::user();
+
+        return view('userProfile', compact('user'));
+    }
+
     public function logout(Request $request)
     {
         Auth::logout(); // Выход из системы
