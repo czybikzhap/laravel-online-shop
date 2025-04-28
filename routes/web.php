@@ -23,3 +23,7 @@ Route::post('/addToCart', [\App\Http\Controllers\CartItemsController::class, 'ad
 
 Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout']);
 
+Route::post('deleteProduct', [\App\Http\Controllers\CartItemsController::class, 'deleteProduct']);
+
+Route::post('deleteCart', [\App\Http\Controllers\CartItemsController::class, 'deleteCart']);
+

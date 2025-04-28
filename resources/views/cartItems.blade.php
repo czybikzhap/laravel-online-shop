@@ -35,6 +35,7 @@
                         <td>&#36;<input name="cost" class="cost" value="{{ $item->price * $elem->amount }}" readonly /></td>
                         <td>
                             <form action="/deleteProduct" method="POST">
+                                @csrf
                                 <button type="submit" class="fa fa-trash-o" title="Delete Item"></button>
                                 <input name="product_id" type="hidden" value="{{ $elem->product_id }}" />
                             </form>
@@ -53,7 +54,8 @@
                 </div>
             </div>
         </div>
-        <form action="/delete" method="POST">
+        <form action="/deleteCart" method="POST">
+            @csrf
             <div id="button">
                 <h1>DEL</h1><button type="submit" class="fa fa-shopping-cart"></button>
             </div>

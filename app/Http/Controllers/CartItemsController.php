@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\ProductRequest;
 use App\Models\CartItem;
 use App\Models\Product;
 use App\Http\Requests\CartItemRequest;
@@ -64,6 +65,36 @@ class CartItemsController extends Controller
         }
 
         return redirect('/catalog');
+    }
+
+    public function deleteProduct(ProductRequest $request)
+    {
+        $user = Auth::user();
+
+        $productIds = $request->get('product_id');
+        //print_r($productIds);die;
+
+        $cartItem = CartItem::query()
+            ->where('user_id', $user->id)
+            ->where('product_id', $productIds)
+            ->delete();
+
+        //print_r($cartItem);die;
+
+        return redirect('/cartItems');
+
+    }
+
+    public function deleteCart()
+    {
+        $user = Auth::user();
+
+        CartItem::query()
+            ->where('user_id', $user->id)
+            ->delete();
+
+        return redirect('/catalog');
+
     }
 
 }
