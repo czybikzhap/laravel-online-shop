@@ -52,6 +52,10 @@
                     <br><br><br><br><br><br>
                     <a href="/catalog" style="color:purple" class="register-link">Go to Catalog</a>
                 </div>
+                <div class="buttons">
+                    <br><br>
+                    <a href="/orders" style="color:purple" class="register-link">Go to Orders</a>
+                </div>
             </div>
         </div>
         <form action="/deleteCart" method="POST">
