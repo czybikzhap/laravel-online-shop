@@ -2,7 +2,7 @@
 <body>
 <div id="container">
     <header>Register new account</header>
-    <form action="/registration" method="post">
+    <form action="{{ route('registration') }}" method="post">
         @csrf
         <fieldset>
             <br/>
@@ -38,10 +38,9 @@
             <input type="submit" name="submit" id="submit" value="REGISTER">
             <br/>
             <div class="buttons">
-                <a href="login" class="register-link"> Login </a>
+                <a href="{{ route('login') }}" class="register-link"> Login </a>
             </div>
         </fieldset>
-        <?php print_r($errors) ?>
     </form>
 </div>
 </body>

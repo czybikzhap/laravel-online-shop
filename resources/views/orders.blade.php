@@ -24,6 +24,10 @@
             <label for="submit"></label>
             <input type="submit" name="submit" id="submit" value="Order">
             <br/>
+            <div class="buttons">
+                <br><br>
+                <a href="{{ route('catalog') }}" style="color:purple" class="register-link">Go to Catalog</a>
+            </div>
         </fieldset>
     </form>
 </div>

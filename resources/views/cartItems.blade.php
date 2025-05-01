@@ -1,8 +1,9 @@
 
-<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+
 <div id="mainContent">
     <div id="header">
-        <h1>Basket <i class="fa fa-shopping-cart"></i></h1>
+        <h1>Корзина <i class="fas fa-shopping-cart"></i></h1>
         <h3>Shopping Basket</h3>
     </div>
     <div id="basket">
@@ -14,29 +15,29 @@
                 <th>Cost</th>
                 <th></th>
             </tr>
-            @if ($productsInCart->isEmpty())
+            @if ($products->isEmpty())
                 <tr>
-                    <td colspan="5" style="text-align: center;">ПУСТО</td> <!-- Сообщение о пустой корзине -->
+                    <td colspan="5" style="text-align: center;">ПУСТО</td>
                 </tr>
             @else
                 @foreach($cartItems as $elem)
                     @php
-                        $item = $productsInCart->firstWhere('id', $elem->product_id);
+                        $item = $products->firstWhere('id', $elem->product_id);
                     @endphp
 
                     <tr>
                         <td> Product {{ $item->product_name }} </td>
                         <td>&#36;<input name="price" class="price" value="{{ $item->price }}" readonly /></td>
                         <td>
-                            <i class="fa fa-minus" title="Decrease Qty"></i>
+                            <i class="fas fa-minus" title="Decrease Qty"></i>
                             <input class="qty" value="{{ $elem->amount }}" name="qty" maxlength="2" />
-                            <i class="fa fa-plus" title="Increase Qty"></i>
+                            <i class="fas fa-plus" title="Increase Qty"></i>
                         </td>
                         <td>&#36;<input name="cost" class="cost" value="{{ $item->price * $elem->amount }}" readonly /></td>
                         <td>
-                            <form action="/deleteProduct" method="POST">
+                            <form action="{{ route('deleteProduct') }}" method="POST">
                                 @csrf
-                                <button type="submit" class="fa fa-trash-o" title="Delete Item"></button>
+                                <button type="submit" class="fas fa-trash-alt" title="Delete Item"></button>
                                 <input name="product_id" type="hidden" value="{{ $elem->product_id }}" />
                             </form>
                         </td>
@@ -50,18 +51,18 @@
                 <p>&#36;<input name="total" id="total" value="{{ print_r('$totalcost') }}" readonly /></p>
                 <div class="buttons">
                     <br><br><br><br><br><br>
-                    <a href="/catalog" style="color:purple" class="register-link">Go to Catalog</a>
+                    <a href="{{ route('catalog') }}" style="color:purple" class="register-link">Go to Catalog</a>
                 </div>
                 <div class="buttons">
                     <br><br>
-                    <a href="/orders" style="color:purple" class="register-link">Go to Orders</a>
+                    <a href="{{ route('orders') }}" style="color:purple" class="register-link">Go to Orders</a>
                 </div>
             </div>
         </div>
-        <form action="/deleteCart" method="POST">
+        <form action="{{ route('deleteCart') }}" method="POST">
             @csrf
             <div id="button">
-                <h1>DEL</h1><button type="submit" class="fa fa-shopping-cart"></button>
+                <h1>DEL</h1><button type="submit" class="fas fa-shopping-cart"></button>
             </div>
         </form>
     </div>
@@ -71,9 +72,8 @@
 </div>
 
 <style>
-
     body {
-        background: url("https://celes.club/uploads/posts/2022-05/1653968424_1-celes-club-p-akatsuki-oboi-na-telefon-krasivie-1.png") no-repeat center center fixed;
+        background: url("https://kartinki.pics/uploads/posts/2021-07/1625668386_42-kartinkin-com-p-oboi-po-naruto-krasivie-46.jpg") no-repeat center center;
         display: flex;
         flex-direction: row;
         justify-content: center;

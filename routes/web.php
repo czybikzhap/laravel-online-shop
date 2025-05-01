@@ -6,28 +6,24 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemsController;
 
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/registration', [\App\Http\Controllers\UserController::class, 'getSignUpForm'])->name('registration');
+Route::post('/registration', [\App\Http\Controllers\UserController::class, 'registration'])->name('registration.submit');
 
-Route::get('/registration', [\App\Http\Controllers\UserController::class, 'getSignUpForm']);
-Route::post('/registration', [\App\Http\Controllers\UserController::class, 'registration']);
+Route::get('/login', [\App\Http\Controllers\UserController::class, 'getLoginForm'])->name('login');
+Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->name('login.submit');
 
-Route::get('/login', [\App\Http\Controllers\UserController::class, 'getLoginForm']);
-Route::post('/login', [\App\Http\Controllers\UserController::class, 'login']);
+Route::get('/catalog', [\App\Http\Controllers\ProductController::class, 'getCatalog'])->name('catalog');
 
-Route::get('/catalog', [\App\Http\Controllers\ProductController::class, 'getCatalog']);
+Route::get('/cartItems', [\App\Http\Controllers\CartItemsController::class, 'getCartItems'])->name('cartItems');
+Route::post('/addToCart', [\App\Http\Controllers\CartItemsController::class, 'addToCart'])->name('addToCart');
 
-Route::get('/cartItems', [\App\Http\Controllers\CartItemsController::class, 'getCartItems']);
-Route::post('/addToCart', [\App\Http\Controllers\CartItemsController::class, 'addToCart']);
+Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
-Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout']);
+Route::post('deleteProduct', [\App\Http\Controllers\CartItemsController::class, 'deleteProduct'])->name('deleteProduct');
 
-Route::post('deleteProduct', [\App\Http\Controllers\CartItemsController::class, 'deleteProduct']);
+Route::post('deleteCart', [\App\Http\Controllers\CartItemsController::class, 'deleteCart'])->name('deleteCart');
 
-Route::post('deleteCart', [\App\Http\Controllers\CartItemsController::class, 'deleteCart']);
+Route::get('userProfile', [\App\Http\Controllers\UserController::class, 'getUserProfile'])->name('userProfile');
 
-Route::get('userProfile', [\App\Http\Controllers\UserController::class, 'getUserProfile']);
-
-Route::get('orders',[\App\Http\Controllers\OrdersController::class, 'getOrders']);
-Route::post('orders', [\App\Http\Controllers\OrdersController::class, 'addOrder']);
+Route::middleware('auth')->get('orders',[\App\Http\Controllers\OrdersController::class, 'getOrders'])->name('orders');
+Route::post('orders', [\App\Http\Controllers\OrdersController::class, 'addOrder'])->name('addOrder');

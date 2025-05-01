@@ -22,7 +22,7 @@
 
 </div>
 <div class="buttons">
-    <a href="/catalog" style="color:orangered" class="register-link">Go to Main</a>
+    <a href="{{ route('catalog') }}" style="color:orangered" class="register-link">Go to Catalog</a>
 </div>
 
 </body>

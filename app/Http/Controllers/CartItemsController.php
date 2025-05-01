@@ -14,25 +14,12 @@ class CartItemsController extends Controller
     public function getCartItems()
     {
         $user = Auth::user();
-        //print_r($user->id);die;
 
-        $cartItems = CartItems::query()
-            ->where('user_id', $user->id)
-            ->get();
-        //print_r($cartItems);die;
+        $cartItems = $user->userProducts()->get();
 
-        $productIds = CartItems::query()
-            ->where('user_id', $user->id)
-            ->pluck('product_id');  // возвращает все product_id данного пользователя
-        //print_r($productIds);die;
+        $products = $user->products()->get();
 
-        $productsInCart = Product::query()
-            ->whereIn('id', $productIds)
-            ->get();
-        //print_r($products);die;
-
-
-        return view('cartItems', compact( 'cartItems', 'productsInCart'));
+        return view('cartItems', compact( 'cartItems', 'products'));
     }
 
     public function addToCart(CartItemRequest $request)
@@ -43,14 +30,11 @@ class CartItemsController extends Controller
         $amount = $request->get('amount');
         //print_r($amount);die;
 
-        $cartItem = CartItems::query()
-            ->where('user_id', $user->id)
-            ->where('product_id', $productId)
-            ->first();
+        $cartItems = $user->userProducts()->where('product_id', $productId)->first();
 
-        if ($cartItem) {
-            $cartItem->amount += $amount;
-            $cartItem->save();
+        if ($cartItems) {
+            $cartItems->amount += $amount;
+            $cartItems->save();
         } else {
             CartItems::query()->create([
                 'user_id' => $user->id,
@@ -69,10 +53,7 @@ class CartItemsController extends Controller
         $productIds = $request->get('product_id');
         //print_r($productIds);die;
 
-        CartItems::query()
-            ->where('user_id', $user->id)
-            ->where('product_id', $productIds)
-            ->delete();
+        $user->userProducts()->where('product_id', $productIds)->delete();
 
         return redirect('/cartItems');
 
@@ -82,9 +63,7 @@ class CartItemsController extends Controller
     {
         $user = Auth::user();
 
-        CartItems::query()
-            ->where('user_id', $user->id)
-            ->delete();
+        $user->userProducts()->where('user_id', $user->id)->delete();
 
         return redirect('/catalog');
 

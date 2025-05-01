@@ -25,45 +25,24 @@ class OrdersController extends Controller
     public function addOrder(OrderRequest $request)
     {
         $user = Auth::user();
-        //dd($request->all());
-        // print_r($request);die;
 
-        Order::query()->create([
+        $order = Order::query()->create([
             'user_id' => $user->id,
             'address' => $request->address,
             'phone' => $request->phone,
         ]);
 
-        $orders = Order::query()
-            ->where('user_id', $user->id)
-            ->first();
+        $cartItem = $user->userProducts()->get();
+        $amountProducts = $cartItem->pluck('amount');
 
-        //var_dump($orders);die;
-        //foreach ($orders as $order) {print_r($order);}die;
+        $products = $user->products()->get();
+        $productIds = $products->pluck('id');
 
-
-        $cartItem = CartItems::query()
-            ->where('user_id', $user->id)
-            ->get();
-
-
-        foreach ($cartItem as $item) {
-            $productIds[] = $item->product_id;
-        }
-        //print_r($productIds);
-
-        foreach ($cartItem as $item) {
-            $amounts[] = $item->amount;
-        }
-        //print_r($amounts);die;
-
-
-        foreach ($productIds as $index => $productId) {
-            $amount = $amounts[$index];
-
+        foreach ($products as $index => $product) {
+            $amount = $amountProducts[$index];
             OrderProducts::query()->create([
-                'order_id' => $orders->id,
-                'product_id' => $productId,
+                'order_id' => $order->id,
+                'product_id' => $product['id'],
                 'amount' => $amount,
             ]);
         }

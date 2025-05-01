@@ -25,7 +25,7 @@
             <input type="submit" name="submit" id="submit" value="LOGIN">
             <br/>
             <div class="buttons">
-                <a href="/registration" class="register-link">Register</a>
+                <a href="{{ route('registration') }}" class="register-link">Register</a>
             </div>
         </fieldset>
     </form>
