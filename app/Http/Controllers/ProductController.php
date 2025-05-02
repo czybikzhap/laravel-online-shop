@@ -17,4 +17,11 @@ class ProductController extends Controller
         return view('catalog', compact('catalog'));
     }
 
+    public function getProduct(int $id)
+    {
+        $product = Product::query()->findOrFail($id);
+
+        return view('product', compact('product'));
+    }
+
 }

@@ -13,13 +13,8 @@ class OrdersController extends Controller
 {
     public function getOrders()
     {
-        if (Auth::check()) {
-            $user = Auth::user();
-            return view('orders', ['user' => $user]);
-        } else {
-            return redirect('/login');
-        }
-
+        $user = Auth::user();
+        return view('orders', ['user' => $user]);
     }
 
     public function addOrder(OrderRequest $request)
@@ -36,7 +31,6 @@ class OrdersController extends Controller
         $amountProducts = $cartItem->pluck('amount');
 
         $products = $user->products()->get();
-        $productIds = $products->pluck('id');
 
         foreach ($products as $index => $product) {
             $amount = $amountProducts[$index];

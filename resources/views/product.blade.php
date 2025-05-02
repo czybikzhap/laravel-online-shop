@@ -8,10 +8,9 @@
     <button> Log Out</button>
 </form>
 
-@foreach ($catalog as $item) <!-- Изменил переменную на $item для ясности -->
 <div class="container ">
     <div class="card asics">
-        <p class="price"> {{$item->price . 'Rub'}}  </p>
+        <p class="price"> {{ $product->price}}   Rub</p>
 
         <i class="info fas fa-info-circle"></i>
 
@@ -19,15 +18,15 @@
             <img src="{{ print_r('img') }} ">
         </div>
         <div class="contentBx  ">
-            <h2>{{ $item->product_name }}</h2>
+            <h2> {{ $product->product_name }} </h2>
 
             <div class="size">
-                <h3>{{ $item->description }}</h3>
+                <h3>{{ $product->description }}</h3>
             </div>
 
-            <form action="{{route('addToCart')}}" method="POST">
+            <form action="{{ route('addToCart') }}" method="POST">
                 @csrf
-                <input type="hidden" name="product_id" value="{{ $item->id }}">
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
                 <input type="hidden" name="amount" class="amount" value="0">
 
                 <div class="quantity-field">
@@ -46,16 +45,15 @@
 
                 <button type="submit">Добавить в корзину</button>
             </form>
-            <form action="{{ route('product', $item->id) }}" method="GET">
-                <button type="submit">Просмотреть продукт</button>
-            </form>
         </div>
     </div>
 </div>
-@endforeach
+
 
 <div class="buttons">
-    <a href="{{ route('cartItems') }}" style="color:blue" class="register-link">Go to Cart</a>
+    <a href="{{ route('catalog') }}" style="color:blue" class="register-link">Go to Catalog</a>
+    <br>
+    <a href="{{ route('cartItems') }}" style="color:black" class="register-link">Go to Cart</a>
     <br>
     <a href="{{ route('userProfile') }}" style="color:red" class="register-link">My Profile</a>
 </div>
