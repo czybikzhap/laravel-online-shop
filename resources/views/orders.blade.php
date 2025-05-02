@@ -26,7 +26,7 @@
             <br/>
             <div class="buttons">
                 <br><br>
-                <a href="{{ route('catalog') }}" style="color:purple" class="register-link">Go to Catalog</a>
+                <a href="{{ route('catalog') }}" style="color:darkblue" class="register-link">Go to Catalog</a>
             </div>
         </fieldset>
     </form>
@@ -40,13 +40,13 @@
     }
 
     body {
-        background: url("https://pibig.info/uploads/posts/2022-11/thumbs/1669754624_26-pibig-info-p-itachi-oboi-vkontakte-28.jpg") no-repeat center center fixed;
+        background: url("https://zefirka.club/wallpapers/uploads/posts/2023-02/1677033767_zefirka-club-p-minato-protiv-devyatikhvostogo-6.jpg") no-repeat center center fixed;
         background-size: cover;
         font-family: 'Droid Serif', serif;
     }
 
     #container {
-        background: rgba(91, 2, 2, 0.5);
+        background: rgba(12, 5, 40, 0.5);
         width: 18.75rem;
         height: 15rem;
         margin: auto;
@@ -73,7 +73,7 @@
     }
 
     input[type="submit"] {
-        background: rgba(129, 3, 3, 1);
+        background: rgb(2, 11, 191);
         border: 0;
         display: block;
         width: 70%;

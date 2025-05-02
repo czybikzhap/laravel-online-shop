@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderProducts;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class OrdersController extends Controller
 {
@@ -20,25 +21,35 @@ class OrdersController extends Controller
     public function addOrder(OrderRequest $request)
     {
         $user = Auth::user();
+        $cartItems = $user->userProducts()->get();
 
-        $order = Order::query()->create([
-            'user_id' => $user->id,
-            'address' => $request->address,
-            'phone' => $request->phone,
-        ]);
+        try {
+            DB::beginTransaction();
 
-        $cartItem = $user->userProducts()->get();
-        $amountProducts = $cartItem->pluck('amount');
-
-        $products = $user->products()->get();
-
-        foreach ($products as $index => $product) {
-            $amount = $amountProducts[$index];
-            OrderProducts::query()->create([
-                'order_id' => $order->id,
-                'product_id' => $product['id'],
-                'amount' => $amount,
+            $order = Order::query()->create([
+                'user_id' => $user->id,
+                'address' => $request->address,
+                'phone' => $request->phone,
             ]);
+
+            //throw new \Exception('test');
+
+            foreach ($cartItems as $cartitem) {
+
+                OrderProducts::query()->create([
+                    'order_id' => $order->id,
+                    'product_id' => $cartitem->product_id,
+                    'amount' => $cartitem->amount,
+                ]);
+            }
+            CartItems::query()->where('user_id', $user->id)->delete();
+
+            DB::commit();
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            throw $exception;
+
         }
 
 

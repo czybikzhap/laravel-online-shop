@@ -18,6 +18,8 @@ class UserController
     }
     public function registration(RegistrationRequest $request)
     {
+        /** @var User $user  */   //добавление аннотации
+
         $data = $request->all();
 
         $user = User::query()->create([

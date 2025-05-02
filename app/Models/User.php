@@ -17,6 +17,12 @@ class User extends Authenticatable
      *
      * @var list<string>
      */
+
+    /** @property string $name   //добавление аннотации
+     * @property string $email
+     * @property string $password
+     */
+
     protected $fillable = [
         'name',
         'email',

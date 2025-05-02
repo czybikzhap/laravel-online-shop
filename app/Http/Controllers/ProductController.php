@@ -10,8 +10,6 @@ class ProductController extends Controller
 {
     public function getCatalog()
     {
-        $user = Auth::user();
-
         $catalog = Product::all();
 
         return view('catalog', compact('catalog'));
