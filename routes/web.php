@@ -30,10 +30,6 @@ Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->n
 
     Route::middleware('auth')->post('logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
-    Route::middleware('auth')->get('email/test', [\App\Http\Controllers\TestMailController::class, 'send'])->name('testMail');
-
-    Route::get('receive', [\App\Http\Controllers\TestMailController::class, 'receive'])->name('receive');
-
 
 
 //});

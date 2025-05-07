@@ -6,6 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Mail\TestMail;
 use App\Models\User;
+use App\Services\RabbitmqSevice;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -15,6 +16,13 @@ use PhpAmqpLib\Message\AMQPMessage;
 
 class UserController
 {
+
+    private RabbitmqSevice $rabbitmqService;
+
+    public function __construct(RabbitmqSevice $rabbitmqService)
+    {
+        $this->rabbitmqService = $rabbitmqService;
+    }
     public function getSignUpForm()
     {
         return view('signUpForm');
@@ -36,16 +44,7 @@ class UserController
             'password' => Hash::make($data['password']),
         ]);
 
-        require_once __DIR__ . '/../../../vendor/autoload.php';
-
-        $connection = new AMQPStreamConnection('rabbitmq', 5673, 'admin', 'admin');      // Создаем соединение с RabbitMQ
-        $channel = $connection->channel();                  // Открываем канал
-
-        $channel->queue_declare('hello', false, false,
-            false, false);               // Объявляем очередь с именем 'hello'
-
-        $msg = new AMQPMessage($user->id);       // Создаем сообщение и добавляем туда id-пользователя
-        $channel->basic_publish($msg, '', 'hello');  // Публикуем сообщение в очередь 'hello'
+        $this->rabbitmqService->produce(['id' => $user->id], 'signUpEmail');
 
         return response()->redirectTo('/login');
 
