@@ -8,12 +8,16 @@ services:
       - .:/var/www/html
     ports:
       - 82:80
+    networks:
+        - app-network
     restart: always
     depends_on:
       - php-fpm
       - db
   php-fpm:
     build: .docker
+    networks:
+        - app-network
     restart: always
     volumes:
       - ./.docker/conf/php/php.ini:/usr/local/etc/php/conf.d/php.ini
@@ -29,6 +33,25 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     ports:
       - 5432:5432
+    networks:
+        - app-network
     volumes:
         - ./pgdata:/var/lib/postgresql/data
 
+
+  rabbitmq:
+      image: "rabbitmq:management"
+      ports:
+          - "5673:5673"
+          - "15673:15673"
+      networks:
+          - app-network
+      environment:
+          RABBITMQ_DEFAULT_USER: admin
+          RABBITMQ_DEFAULT_PASS: admin
+      volumes:
+          - ./rabbitmq-config/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+
+networks:
+      app-network:
+          driver: bridge

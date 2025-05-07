@@ -1,8 +1,8 @@
 /.phpunit.cache
 /node_modules
-/public/build
-/public/hot
-/public/storage
+/rabbitmq-config/public/build
+/rabbitmq-config/public/hot
+/rabbitmq-config/public/storage
 /storage/*.key
 /storage/pail
 /vendor
@@ -21,3 +21,6 @@ yarn-error.log
 /.nova
 /.vscode
 /.zed
+/pgdata
+.bash_history
+.erlang.cookie
