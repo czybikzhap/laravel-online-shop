@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use PhpAmqpLib\Connection\AMQPStreamConnection;
 use PhpAmqpLib\Message\AMQPMessage;
+use App\Jobs\SendUserNotification;
 
 class UserController
 {
@@ -26,7 +27,6 @@ class UserController
     public function getSignUpForm()
     {
         return view('signUpForm');
-
     }
 
     /**
@@ -44,7 +44,9 @@ class UserController
             'password' => Hash::make($data['password']),
         ]);
 
-        $this->rabbitmqService->produce(['id' => $user->id], 'signUpEmail');
+        SendUserNotification::dispatch($user);
+
+        //$this->rabbitmqService->produce(['id' => $user->id], 'signUpEmail');
 
         return response()->redirectTo('/login');
 
