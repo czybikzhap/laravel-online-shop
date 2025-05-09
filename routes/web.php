@@ -15,7 +15,7 @@ Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->n
 //Route::middleware('Auth')->group( function () {
 
     Route::middleware('auth')->get('catalog', [\App\Http\Controllers\ProductController::class, 'getCatalog'])->name('catalog');
-    Route::middleware('Auth')->get('product/{id}', [\App\Http\Controllers\ProductController::class, 'getProduct'])->name('product');
+    Route::middleware('auth')->get('product/{id}', [\App\Http\Controllers\ProductController::class, 'getProduct'])->name('product');
 
     Route::middleware('auth')->get('cartItems', [\App\Http\Controllers\CartItemsController::class, 'getCartItems'])->name('cartItems');
     Route::middleware('auth')->post('addToCart', [\App\Http\Controllers\CartItemsController::class, 'addToCart'])->name('addToCart');

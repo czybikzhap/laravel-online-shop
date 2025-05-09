@@ -48,7 +48,7 @@
         <div id="totalAmount">
             <div class="left">
                 <h1>Total Cost</h1>
-                <p>&#36;<input name="total" id="total" value="{{ print_r('$totalcost') }}" readonly /></p>
+                <h2 style="font-size: 36px; font-weight: bold;">&#36;{{ $totalCost }}</h2>
                 <div class="buttons">
                     <br><br><br><br><br><br>
                     <a href="{{ route('catalog') }}" style="color:purple" class="register-link">Go to Catalog</a>

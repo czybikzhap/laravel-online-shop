@@ -19,7 +19,9 @@ class CartItemsController extends Controller
 
         $products = $user->products()->get();
 
-        return view('cartItems', compact( 'cartItems', 'products'));
+        $totalCost = $this->totalCost();
+
+        return view('cartItems', compact( 'cartItems', 'products', 'totalCost'));
     }
 
     public function addToCart(CartItemRequest $request)
@@ -44,6 +46,23 @@ class CartItemsController extends Controller
         }
 
         return redirect('/catalog');
+    }
+
+    public function totalCost()
+    {
+        $user = Auth::user();
+        $cartItems = $user->userProducts()->get();
+        $products = $user->products()->get();
+
+        $totalCost = 0;
+
+        foreach($cartItems as $item) {
+            $elem = $products->firstWhere('id', $item->product_id);
+            $cost = $item->amount * $elem->price;
+            $totalCost += $cost;
+        }
+
+        return $totalCost;
     }
 
     public function deleteProduct(ProductRequest $request)

@@ -5,12 +5,15 @@
         <fieldset>
             @csrf
             <input type="hidden" name="user_id" id="user_id" value="{{ $user->id }}">
+            <label for="userName" style="color:red"><b>{{ $user->name }}</b></label>
+            <br/>
+            <br/>
             <input type="text" name="address" id="address" placeholder="Address" >
             @error('address')
             <label for="address"> <b>{{ $message }} </b> </label>
             @enderror
             <br/>
-            <label style="color:red">
+
             </label>
             <br/>
             <input type="text" name="phone" id="phone" placeholder="Contact phone" >
@@ -21,12 +24,16 @@
             <label style="color:red">
             </label>
             <br/>
+            <h2 style="font-size: 20px; font-weight: bold;">
+                <span style="margin-right: 10px;">Total Cost:</span>
+                <span>&#36;{{ $totalCost }}</span>
+            </h2>
             <label for="submit"></label>
             <input type="submit" name="submit" id="submit" value="Order">
             <br/>
             <div class="buttons">
                 <br><br>
-                <a href="{{ route('catalog') }}" style="color:darkblue" class="register-link">Go to Catalog</a>
+                <a href="{{ route('catalog') }}" style="color:darkred" class="register-link">Go to Catalog</a>
             </div>
         </fieldset>
     </form>
@@ -48,7 +55,7 @@
     #container {
         background: rgba(12, 5, 40, 0.5);
         width: 18.75rem;
-        height: 15rem;
+        height: 20rem;
         margin: auto;
         position: absolute;
         top: 0;
