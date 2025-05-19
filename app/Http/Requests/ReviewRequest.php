@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class LoginRequest extends FormRequest
+class ReviewRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,16 +22,18 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => 'required',
-            'password' => 'required',
+            'product_id' => 'required|integer',
+            'review' => 'required|string'
         ];
     }
 
     public function messages(): array
     {
         return [
-            "email.required" => "Email должен быть заполнен",
-            "password.required" => "укажите пароль",
+            "product_id.required" => "не указано id продукта",
+            "product_id.integer" => "неправильное id продукта",
+            "review.required" => "пустой отзыв",
+            "review.string" => "отзыв должен быть строкой",
         ];
     }
 }

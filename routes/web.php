@@ -30,6 +30,8 @@ Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->n
 
     Route::middleware('auth')->post('logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
+    Route::middleware('auth')->post('addReview', [\App\Http\Controllers\ProductController::class, 'addReview'])->name('addReview');
+
 
 
 //});

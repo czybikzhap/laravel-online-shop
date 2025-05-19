@@ -47,9 +47,31 @@
             </form>
         </div>
     </div>
+
+    <div class="reviews-section">
+        <h3>Отзывы о товаре</h3>
+        <ul>
+            @foreach($reviews as $elem)
+                <li>{{ $elem->review }}</li>
+            @endforeach
+        </ul>
+        <div class="review-form">
+            <h3>Оставьте отзыв</h3>
+            <form action="{{ route('addReview') }}" method="POST">
+                @csrf
+                <input type="hidden" name="product_id" value="{{ $product->id }}">
+                @error('product_id')
+                <label for="product_id"> <b>{{ $message }} </b> </label>
+                @enderror
+                <textarea name="review" rows="4" placeholder="Ваш отзыв..." required></textarea>
+                @error('review')
+                <label for="review"> <b>{{ $message }} </b> </label>
+                @enderror
+                <button type="submit">Отправить отзыв</button>
+            </form>
+        </div>
+    </div>
 </div>
-
-
 <div class="buttons">
     <a href="{{ route('catalog') }}" style="color:blue" class="register-link">Go to Catalog</a>
     <br>
@@ -354,6 +376,18 @@
     .quantity-field .number::selection{
         background: none;
     }
+
+    .reviews-section {
+        background-color: white;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        margin-top: 20px; /* Отступ сверху для отделения от других элементов */
+    }
+    .review-form {
+        margin-top: 20px; /* Отступ сверху для отделения формы от списка отзывов */
+    }
+
 
 
 </style>
