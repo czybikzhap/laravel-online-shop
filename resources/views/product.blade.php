@@ -52,7 +52,11 @@
         <h3>Отзывы о товаре</h3>
         <ul>
             @foreach($reviews as $elem)
-                <li>{{ $elem->review }}</li>
+                <li>
+                    <span class="review-username">{{ $users[$elem->user_id] }}</span>
+                    <span class="review-date">{{ $elem->updated_at }}</span><br>
+                    <span class="review-text">{{ $elem->review }}</span>
+                </li>
             @endforeach
         </ul>
         <div class="review-form">
@@ -387,6 +391,33 @@
     .review-form {
         margin-top: 20px; /* Отступ сверху для отделения формы от списка отзывов */
     }
+
+    .review-username {
+        font-family: 'Arial Black', Arial, sans-serif;
+        font-size: 0.85rem;
+        color: #333;
+    }
+    .review-date {
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 0.8rem;
+        color: #666;
+        margin-left: 8px;
+    }
+    .review-text {
+        font-family: 'Georgia', serif;
+        font-size: 1rem;
+        color: #000;
+        margin-top: 4px;
+    }
+    /* Optional: styling the list items and layout */
+    .reviews-section ul {
+        list-style-type: none;
+        padding-left: 0;
+    }
+    .reviews-section li {
+        margin-bottom: 1.5em;
+    }
+
 
 
 
