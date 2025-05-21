@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\ReviewRequest;
+use App\Models\Order;
 use App\Models\Product;
 use App\Models\Review;
 use App\Models\User;
@@ -58,27 +59,31 @@ class ProductController extends Controller
     {
         $user = Auth::user();
 
+        $userId = $user->id;
         $data = $request->all();
-        $id = $data['product_id'];
+        $productId = $data['product_id'];
 
-        $product = Cache::remember("product" . $id, 3600, function () use ($id) {
-            return Product::query()->findOrFail($id);
-        });
+        $orderExists = Order::where('user_id', $userId)
+            ->whereHas('orderProducts', function($query) use ($productId) {
+                $query->where('product_id', $productId);
+            })
+            ->exists();
 
-        Review::query()->create([
-            'user_id' => $user->id,
-            'product_id' => $data['product_id'],
-            'review' => $data['review']
-        ]);
+        If ($orderExists) {
+            Review::query()->create([
+                'user_id' => $user->id,
+                'product_id' => $data['product_id'],
+                'review' => $data['review']
+            ]);
 
-        Cache::forget('reviews_product_' . $id);
+            Cache::forget('reviews_product_' . $productId);
 
-        $reviews = Review::query()->where('product_id', $id)->get();
-        //print_r($reviews);die;
-        //$reviewUpdated = $reviews->updated_at;
-        //print_r($reviewUpdated);die;
+        } else {
+            return redirect("/product/{$productId}")
+                ->with('error', 'Вы не заказали этот продукт, не можете оставить отзыв.');
+        }
 
-        return view('product', compact('product','reviews', 'user'));
+        return redirect("/product/{$productId}")->with('success', 'Ваш отзыв успешно оставлен!');
 
     }
 

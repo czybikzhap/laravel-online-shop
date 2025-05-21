@@ -67,7 +67,19 @@
                 @error('product_id')
                 <label for="product_id"> <b>{{ $message }} </b> </label>
                 @enderror
+
                 <textarea name="review" rows="4" placeholder="Ваш отзыв..." required></textarea>
+                @if(session('error'))
+                    <div class="alert alert-danger">
+                        {{ session('error') }}
+                    </div>
+                @endif
+
+                @if(session('success'))
+                    <div class="alert alert-success">
+                        {{ session('success') }}
+                    </div>
+                @endif
                 @error('review')
                 <label for="review"> <b>{{ $message }} </b> </label>
                 @enderror
