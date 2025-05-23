@@ -6,7 +6,7 @@ use App\Http\Requests\LoginRequest;
 use App\Http\Requests\RegistrationRequest;
 use App\Mail\TestMail;
 use App\Models\User;
-use App\Services\RabbitmqSevice;
+use App\Services\RabbitmqService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -18,9 +18,9 @@ use App\Jobs\SendUserNotification;
 class UserController
 {
 
-    private RabbitmqSevice $rabbitmqService;
+    private RabbitmqService $rabbitmqService;
 
-    public function __construct(RabbitmqSevice $rabbitmqService)
+    public function __construct(RabbitmqService $rabbitmqService)
     {
         $this->rabbitmqService = $rabbitmqService;
     }
@@ -86,8 +86,6 @@ class UserController
 
         return redirect('/registration '); // Перенаправление на главную страницу или страницу входа
     }
-
-
 
 
 

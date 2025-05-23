@@ -4,7 +4,7 @@ namespace App\Console\Commands;
 
 use App\Mail\TestMail;
 use App\Models\User;
-use App\Services\RabbitmqSevice;
+use App\Services\RabbitmqService;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
@@ -29,8 +29,8 @@ class SignUpNotifyCommand extends Command
      * Execute the console command.
      */
 
-    private RabbitmqSevice $rabbitmqService;
-    public function __construct(RabbitmqSevice $rabbitmqService)
+    private RabbitmqService $rabbitmqService;
+    public function __construct(RabbitmqService $rabbitmqService)
     {
         parent::__construct();
         $this->rabbitmqService = $rabbitmqService;

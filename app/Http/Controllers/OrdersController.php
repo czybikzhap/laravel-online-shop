@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\OrderRequest;
+use App\Jobs\CreateOrderTask;
 use App\Models\CartItems;
 use App\Models\Order;
 use App\Models\OrderProducts;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Http;
 
 class OrdersController extends Controller
 {
@@ -55,13 +57,15 @@ class OrdersController extends Controller
             CartItems::query()->where('user_id', $user->id)->delete();
 
             DB::commit();
+
+            CreateOrderTask::dispatch($order, $user, $cartItems, $request->address, $request->phone);
+
         } catch (\Exception $exception) {
             DB::rollBack();
 
             throw $exception;
 
         }
-
 
 
         return redirect('/catalog');
