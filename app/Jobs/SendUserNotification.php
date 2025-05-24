@@ -7,6 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable as FoundationQueueable;
 use App\Mail\UserNotificationMail;
 use Illuminate\Bus\Queueable;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
@@ -35,7 +36,10 @@ class SendUserNotification implements ShouldQueue
 
     public function handle(): void
     {
-        Mail::to($this->user->email)->send(new UserNotificationMail($this->user));
-
+        try {
+            Mail::to($this->user->email)->send(new UserNotificationMail($this->user));
+        } catch (\Exception $exception) {
+            Log::error('Ошибка при отправке письма пользователю ' . $this->user->email . ': ' . $exception->getMessage());
+        }
     }
 }

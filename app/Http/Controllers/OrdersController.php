@@ -7,6 +7,7 @@ use App\Jobs\CreateOrderTask;
 use App\Models\CartItems;
 use App\Models\Order;
 use App\Models\OrderProducts;
+use App\Services\Client\YougileClient;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
