@@ -21,11 +21,11 @@ class CreateOrderTask implements ShouldQueue
 
     protected Order $order;
     protected User $user;
-    protected Collection $cartItems;
+    protected array $cartItems;
     protected string $address;
     protected string $phone;
 
-    public function __construct(Order $order, User $user, $cartItems, $address, $phone)
+    public function __construct(Order $order, User $user, array $cartItems, $address, $phone)
     {
         $this->order = $order;
         $this->user = $user;

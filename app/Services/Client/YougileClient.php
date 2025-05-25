@@ -18,7 +18,7 @@ class YougileClient
     public function __construct()
     {
         $this->baseUrl = 'https://ru.yougile.com/api-v2';
-        $this->apiKey = 'L4vpFnujCfiCky1+4jsf5jMAcfvw3JNyO2NfuB1irlQwp30JbaraZFN5MhmC9pip';
+        $this->apiKey = env('YOUGILE_API_KEY');
     }
 
     public function createTask(array $data): bool

@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OrdersController extends Controller
 {
@@ -59,7 +60,9 @@ class OrdersController extends Controller
 
             DB::commit();
 
-            CreateOrderTask::dispatch($order, $user, $cartItems, $request->address, $request->phone);
+            $cartItemsArray = $cartItems->toArray();
+
+            CreateOrderTask::dispatch($order, $user, $cartItemsArray, $request->address, $request->phone);
 
         } catch (\Exception $exception) {
             DB::rollBack();
