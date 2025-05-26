@@ -21,9 +21,8 @@ class YougileClient
         $this->apiKey = env('YOUGILE_API_KEY');
     }
 
-    public function createTask(array $data): bool
+    public function createTask(array $data): string
     {
-
 
         try {
             // Создание задачи в Yougile
@@ -38,7 +37,9 @@ class YougileClient
 
             Log::info('Задача успешно создана в Yougile: ' . $response->body());
 
-            return true;
+            $taskId = $response->json();
+
+            return $taskId['id'];
 
         } catch (\Exception $exception) {
             Log::error('Ошибка при обработке задачи в Yougile: ' . $exception->getMessage());
