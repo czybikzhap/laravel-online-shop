@@ -4,8 +4,10 @@ namespace App\Console\Commands;
 
 use App\Jobs\CreateOrderTask;
 use App\Models\Order;
+use App\Models\OrderProducts;
 use App\Models\User;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class CreateOrderTaskCommand extends Command
@@ -29,22 +31,31 @@ class CreateOrderTaskCommand extends Command
      */
     public function handle()
     {
-        $orders = Order::query()->get();
+        // Получаем все заказы без task_id
+        $orders = Order::whereNull('task_id')->get();
+        //$orders = DB::table('orders')->whereNull('task_id')->get();
+
 
         if ($orders->isEmpty()) {
-            $this->info('Нет заказов без task_id для обработки.');
-            return; // Если нет заказов без task_id, то выходим
+            $this->info('Нет заказов для обработки.');
+            return; // Выход из команды, если нет заказов
         }
 
-        foreach ($orders as $order) {
 
+        // Логируем количество заказов, которые нужно обработать
+        $this->info("Обрабатывается " . $orders->count() . " заказов.");
+
+        // Перебираем заказы
+        foreach ($orders as $order) {
             // Получаем пользователя с id = $order->user_id
             $user = User::where('id', $order->user_id)->first();
 
-            $cartItems = $order->orderProducts()->get();  // Получаем товары пользователя
+            // Получаем товары из таблицы order_products для данного заказа
+            $orderProducts = OrderProducts::with('product')->where('order_id', $order->id)->get();
+
+            $cartItemsArray = $orderProducts->toArray();
 
 
-            $cartItemsArray = $cartItems->toArray();
 
             $address = $order->address;
             $phone = $order->phone;
@@ -52,6 +63,9 @@ class CreateOrderTaskCommand extends Command
             // Отправляем задачу в очередь
             CreateOrderTask::dispatch($order, $user, $cartItemsArray, $address, $phone);
 
+            // Выводим информацию о том, что задача была отправлена
+            $this->info("Задача для заказа #{$order->id} отправлена в очередь.");
         }
+
     }
 }

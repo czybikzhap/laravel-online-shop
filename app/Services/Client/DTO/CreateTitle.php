@@ -24,6 +24,8 @@ class CreateTitle
             }
         }
 
+        Log::info('Cart items description: ' . $cartItemsDescription);
+
         return [
             'title' => 'Сборка заказа #' . $this->data['order_id'],
             'columnId' => env('COLUMN_ID'),  // ID колонки

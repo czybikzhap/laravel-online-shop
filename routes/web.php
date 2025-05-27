@@ -4,6 +4,7 @@ use App\Controller\UserController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemsController;
+use App\Http\Controllers\Controller;
 
 
 Route::get('/registration', [\App\Http\Controllers\UserController::class, 'getSignUpForm'])->name('registration');
@@ -11,6 +12,8 @@ Route::post('/registration', [\App\Http\Controllers\UserController::class, 'regi
 
 Route::get('/login', [\App\Http\Controllers\UserController::class, 'getLoginForm'])->name('login');
 Route::post('/login', [\App\Http\Controllers\UserController::class, 'login'])->name('login.submit');
+
+Route::get('getinfo', [\App\Http\Controllers\Controller::class, 'getTestInfo'])->name('getinfo');
 
 Route::middleware('auth')->group( function () {
 

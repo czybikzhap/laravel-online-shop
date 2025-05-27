@@ -58,7 +58,7 @@ class CreateOrderTask implements ShouldQueue
         try {
             $taskId = $yougileClient->createTask($data);
 
-            //$this->order->update(['task_id' => $taskId]);
+            $this->order->update(['task_id' => $taskId]);
 
             Log::info('Задача успешно создана в Yougile.');
         } catch (\Exception $exception) {
