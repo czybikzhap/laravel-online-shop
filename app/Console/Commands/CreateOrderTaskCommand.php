@@ -31,6 +31,10 @@ class CreateOrderTaskCommand extends Command
      */
     public function handle()
     {
+
+        Log::info('handle() запущен');
+        echo '==> Вызов handle()' . PHP_EOL;
+
         // Получаем все заказы без task_id
         $orders = Order::whereNull('task_id')->get();
         //$orders = DB::table('orders')->whereNull('task_id')->get();
@@ -54,8 +58,6 @@ class CreateOrderTaskCommand extends Command
             $orderProducts = OrderProducts::with('product')->where('order_id', $order->id)->get();
 
             $cartItemsArray = $orderProducts->toArray();
-
-
 
             $address = $order->address;
             $phone = $order->phone;
