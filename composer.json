@@ -10,7 +10,8 @@
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
         "php-amqplib/php-amqplib": "^3.2",
-        "predis/predis": "*"
+        "predis/predis": "*",
+        "yoomoney/yookassa-sdk-php": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -8,20 +8,25 @@ use App\Models\CartItems;
 use App\Models\Order;
 use App\Models\OrderProducts;
 use App\Services\Client\YougileClient;
+use app\Services\YooKassaService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use YooKassa\Client;
 
 class OrdersController extends Controller
 {
 
-    protected $cartItemsController;
-    public function __construct(CartItemsController $cartItemsController)
+    protected CartItemsController $cartItemsController;
+    protected YooKassaService $yooKassaService;
+
+    public function __construct(CartItemsController $cartItemsController, YooKassaService $yooKassaService)
     {
         $this->cartItemsController = $cartItemsController;
+        $this->yooKassaService = $yooKassaService;
     }
 
     public function getOrders()
@@ -44,34 +49,51 @@ class OrdersController extends Controller
                 'user_id' => $user->id,
                 'address' => $request->address,
                 'phone' => $request->phone,
+                'status' => 'pending',
             ]);
 
-            //throw new \Exception('test');
-
-            foreach ($cartItems as $cartitem) {
-
+            foreach ($cartItems as $cartItem) {
                 OrderProducts::query()->create([
                     'order_id' => $order->id,
-                    'product_id' => $cartitem->product_id,
-                    'amount' => $cartitem->amount,
+                    'product_id' => $cartItem->product_id,
+                    'amount' => $cartItem->amount,
                 ]);
             }
+
+            $totalCost = $this->cartItemsController->totalCost();
+
             CartItems::query()->where('user_id', $user->id)->delete();
 
             DB::commit();
 
-            $cartItemsArray = $cartItems->toArray();
+            CreateOrderTask::dispatch(
+                $order,
+                $user,
+                $cartItems->toArray(),
+                $request->address,
+                $request->phone
+            );
 
-            CreateOrderTask::dispatch($order, $user, $cartItemsArray, $request->address, $request->phone);
+            $paymentData = $this->yooKassaService->createPayment(
+                totalCost: $totalCost,
+                orderId: $order->id,
+                returnUrl: route('payment.success')
+            );
+
+            $order->update(['payment_id' => $paymentData['id']]);
+
+            return redirect($paymentData['url']);
 
         } catch (\Exception $exception) {
             DB::rollBack();
 
+            $order->update(['status' => 'failed']);
+
             throw $exception;
+
 
         }
 
 
-        return redirect('/catalog');
     }
 }

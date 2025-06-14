@@ -1,6 +1,8 @@
 <?php
 
 use App\Controller\UserController;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\PaymentStatusController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartItemsController;
@@ -34,6 +36,9 @@ Route::middleware('auth')->group( function () {
     Route::post('logout', [\App\Http\Controllers\UserController::class, 'logout'])->name('logout');
 
     Route::post('addReview', [\App\Http\Controllers\ProductController::class, 'addReview'])->name('addReview');
+
+    Route::post('/yookassa/webhook', [PaymentController::class, 'handleWebhook']);
+    Route::get('/payment/success', [PaymentStatusController::class, 'success'])->name('payment.success');
 
 });
 
