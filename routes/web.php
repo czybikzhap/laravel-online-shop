@@ -37,7 +37,7 @@ Route::middleware('auth')->group( function () {
 
     Route::post('addReview', [\App\Http\Controllers\ProductController::class, 'addReview'])->name('addReview');
 
-    Route::post('/yookassa/webhook', [PaymentController::class, 'handleWebhook']);
+    Route::post('/yookassa/webhook', [PaymentController::class, 'handleWebhook'])->name('yookassa.webhook');
     Route::get('/payment/success', [PaymentStatusController::class, 'success'])->name('payment.success');
 
 });

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use YooKassa\Client;
 
 class OrdersController extends Controller
@@ -64,7 +65,7 @@ class OrdersController extends Controller
 
             CartItems::query()->where('user_id', $user->id)->delete();
 
-            DB::commit();
+            DB::commit(); // <-- транзакция завершена
 
             CreateOrderTask::dispatch(
                 $order,
@@ -74,26 +75,61 @@ class OrdersController extends Controller
                 $request->phone
             );
 
-            $paymentData = $this->yooKassaService->createPayment(
-                totalCost: $totalCost,
-                orderId: $order->id,
-                returnUrl: route('payment.success')
-            );
+            $shopId = env('YOOKASSA_SHOP_ID');
+            $secretKey = env('YOOKASSA_SECRET_KEY');
 
-            $order->update(['payment_id' => $paymentData['id']]);
+            $paymentData = [
+                "amount" => [
+                    "value" => number_format($totalCost, 2, '.', ''),
+                    "currency" => "RUB",
+                ],
+                "payment_method_data" => [
+                    "type" => "bank_card"
+                ],
+                "confirmation" => [
+                    "type" => "redirect",
+                    "return_url" => route('payment.success'),
+                ],
+                "capture" => true,
+                "description" => "Order #{$order->id}",
+            ];
 
-            return redirect($paymentData['url']);
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'Idempotence-Key' => (string) Str::uuid(),
+            ])->withBasicAuth($shopId, $secretKey)
+                ->post('https://api.yookassa.ru/v3/payments', $paymentData);
+
+            if ($response->successful()) {
+                $payment = $response->json();
+
+                $order->update(['payment_id' => $payment['id']]);
+
+                return redirect($payment['confirmation']['confirmation_url']);
+
+            } else {
+
+                Log::error('Ошибка при создании платежа в YooKassa', [
+                    'response' => $response->body()
+                ]);
+
+                $order->query()->update(['status' => 'failed']);
+
+                throw new \Exception('Не удалось создать платёж в YooKassa.');
+            }
 
         } catch (\Exception $exception) {
+
             DB::rollBack();
 
-            $order->update(['status' => 'failed']);
+            if (isset($order)) {
+                $order->query()->update(['status' => 'failed']);
+            }
 
-            throw $exception;
+            report($exception);
 
-
+            return redirect()->back()->withErrors('Произошла ошибка при создании заказа: ' . $exception->getMessage());
         }
-
 
     }
 }

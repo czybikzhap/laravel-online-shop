@@ -13,7 +13,9 @@ class Order extends Model
         'user_id',
         'address',
         'phone',
-        'task_id'
+        'task_id',
+        'payment_id',
+        'status'
     ];
 
     public function orderProducts()

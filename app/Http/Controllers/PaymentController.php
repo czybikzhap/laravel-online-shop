@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Jobs\ProcessYooKassaWebhook;
 
+
 class PaymentController extends Controller
 {
     public function handleWebhook(Request $request)
